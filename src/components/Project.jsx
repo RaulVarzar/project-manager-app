@@ -1,48 +1,45 @@
-export default function Project() {
+export default function Project( {project, deleteProject}) {
+
+    const formattedDate = new Date(project.date).toLocaleDateString('en-GB', {
+        year: 'numeric', month: 'short', day:'numeric'
+    })
+
     return(
         <>
-            <div className="w-7/12 mx-auto my-auto shadow-xl rounded-xl card bg-base-300 animate-fade-up animate-duration-200">
-                <div className="card-body">
+          <div className="mx-2 rounded-lg elevation-8 md:mx-10 lg:mx-12 xl:mx-36 bg-neutral animate-fade-up animate-duration-100">
+            <div className="p-0">
+                <div className="p-0 text-center lg:flex">
+                    <div className="flex content-center self-stretch px-2 py-4 rounded-t-lg lg:rounded-r-none lg:rounded-l-lg lg:px-10 bg-base-100 lg:text-right min-w-fit">
+                        <div className="m-auto ">
+                            <h2 className="text-3xl font-bold leading-none tracking-wide text-gray-100 uppercase">{project.title}</h2>
+                            <p className="text-xs leading-none text-gray-500">Due on: {project.date}</p>
+                            <div className="m-0 divider"></div>
+                            <p className="text-lg italic tracking-widest text-gray-300">{project.description}</p>
+                        </div>
 
-                <div className="flex flex-col">
-                    <div className="grid card place-items-center">
-                    {/* <button className="btn btn-outline btn-secondary">Delete Project</button> */}
-
-                        <h1 className="mt-4 text-3xl card-title">LEARNING REACT</h1>
-                        <p className="text-sm text-accent">Dec 29, 2024</p>
-                        <h2 className="mt-6 text-2xl">TASKS:</h2>
-
-                        <ul className="flex flex-wrap justify-center gap-4 my-4 lg:text-lg">
-                            <li className="flex px-10 py-3 space-x-3 rounded-full bg-base-100">
-                                <span className="text-base-content">List Item 1 List  Item 1 List Item 1 List Item 1</span>
-                            </li>
-
-                            <li className="flex px-10 py-3 space-x-3 rounded-full bg-base-100">
-                                <span className="text-base-content">List Item 2 List </span>
-                            </li>
-
-                            <li className="flex px-10 py-3 space-x-3 rounded-full bg-base-100">
-                                <span className="text-base-content">List Item 3  1 List Item 1 List It</span>
-                            </li>
-                            <li className="flex px-10 py-3 space-x-3 rounded-full bg-base-100">
-                                <span className="text-base-content">List Item 3  1 List Item 1 List It</span>
-                            </li>
-                        </ul>
-                        
-                    </div> 
-
-                    <div className="flex justify-center mt-2 rounded-xl join">
-                         <input type="text" placeholder="Input new task" className="w-full max-w-xs join-item input input-bordered" />
-                        <button className="px-6 join-item btn btn-accent">ADD</button>
                     </div>
-
-                    <div className="divider"></div> 
+                    <div className="justify-center p-10 pb-4">  
+                        <h2 className="mx-auto text-2xl font-bold text-center text-gray-200">TASKS:</h2>
+                        <div className="flex flex-wrap justify-center gap-2 p-1 md:p-4">
+                            <input type="text" placeholder="Add new task" className="w-full max-w-xs rounded-lg outline-none cursor-pointer input" />
+                            {project.tasks.map((task) => 
+                                <span class="bg-info-content text-center grow rounded-lg px-6 py-3 text-sm font-semibold text-neutral-content">{task}</span>
+                            )}
+                        </div>
+                        
+                        <button onClick={deleteProject} className="mx-auto mt-4 text-gray-300 btn-sm btn btn-ghost hover:text-red-500">
+                            <i className="fa fa-trash-can"> </i>
+                            Delete project
+                        </button>
+                    </div>
+                    
+                    
                 </div>
-
-                <button className="self-center max-w-sm btn btn-sm btn-outline btn-error"> Delete project</button>
-
-                </div>
+                
+                
             </div>
+        </div>
+            
         </>
     )
 }

@@ -9,7 +9,8 @@ export default {
   },
   plugins: [
     require("daisyui"),
-    require('tailwindcss-animated')
+    require('tailwindcss-animated'),
+    require('tailwindcss-elevation')
   ],
   daisyui: {
     themes: ["light", "dark", "sunset", "business", "dark", "luxury", "synthwave", "forest", "black"],

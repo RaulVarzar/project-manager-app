@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { isValidElement, useState } from "react";
 import Sidebar from "./components/Sidebar.jsx";
 import NewProject from "./components/NewProjectForm.jsx"; 
 import Project  from "./components/Project.jsx"
@@ -9,7 +9,14 @@ function App() {
 
   const [projectsState, setProjectsState] = useState({
     selectedProject: undefined,
-    projects: []
+    projects: [
+      { title: 'My React Project',
+        description: 'This is my first test project',
+        id: 1,
+        date: '2023-11-11',
+        tasks: ['Duis eget elit mi. In hac habitasse.', 'Duis eget elit mi. In hac habitasse.', 'hello', 'Lorem ipsum']
+    }
+    ]
   })
 
   function handleAddNewProject () {
@@ -21,11 +28,12 @@ function App() {
     })
   }
 
-  function handleSubmitProject(projectData) {
+  function handleSubmitProject(projectData) {  // used to submit the form data and create a new project
     setProjectsState(prevState =>{
       const newProject = {
         ...projectData,
-        id : Math.random()
+        id : Math.random(),
+        tasks: []
       }
       return{
         ...prevState,
@@ -35,26 +43,59 @@ function App() {
   })
   }
 
-  let content
+  function handleDeleteProject() {  // used to submit the form data and create a new project
+    setProjectsState(prevState =>{
+      return{
+        ...prevState,
+        selectedProject: undefined,
+        projects: prevState.projects.filter((project) => project.id != prevState.selectedProject)
+      }
+  })
+  }
+
+  function handleSelectProject(id){
+    setProjectsState( prevState => {
+      return{
+        ...prevState,
+        selectedProject: (id)
+      }
+    })
+  }
+
+  function handleCancelForm(){  // used to close the cancel form and go back to the main screen
+    setProjectsState( prevState => {
+      return{
+        ...prevState,
+        selectedProject: undefined
+      }
+    })
+    console.log(projectsState.projects)
+  }
+
+  const selectedProject = projectsState.projects.find(project => project.id === projectsState.selectedProject)
+
+  let content = <Project project={selectedProject} deleteProject={handleDeleteProject}></Project>
 
   if(projectsState.selectedProject === null) {
-    content = <NewProject onAdd={handleSubmitProject}/>
+    content = <NewProject onAdd={handleSubmitProject} cancelForm={handleCancelForm}/>
   } else if (projectsState.selectedProject === undefined){
     content = <NoProjectSelected onAddProject = {handleAddNewProject}/> 
   }
 
+
   return (
-    <>
-      <main className="flex min-h-screen bg-base-200">
-
-        <Sidebar onAddProject={handleAddNewProject} activeProjects={projectsState.projects}></Sidebar> 
-
-        <div className="flex flex-col w-full my-auto">
+    <div className="flex"> 
+      <Sidebar 
+        onAddProject={handleAddNewProject} 
+        activeProjects={projectsState.projects} 
+        onSelectProject={handleSelectProject}
+      />
+      
+      <div className="grid content-center w-full min-h-screen my-auto elevation-10">
             {content}
-            {/* <Project></Project> */}
-        </div>
-      </main>
-    </>
+      </div>
+     
+    </div>
   );
 }
 
