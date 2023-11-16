@@ -13,12 +13,12 @@ export default {
     require('tailwindcss-elevation')
   ],
   daisyui: {
-    themes: ["light", "dark", "sunset", "business", "dark", "luxury", "synthwave", "forest", "black"],
+    themes: ["light", "dark", "dim", "dark", "luxury", "synthwave", "forest", "black", "aqua"],
   },
   theme: {
     extend: {
       fontFamily: {
-        'roboto-mono': ['"Roboto"', 'cursive']
+        'roboto-mono': ['"Roboto Mono"', 'cursive']
       }
     }
   }
