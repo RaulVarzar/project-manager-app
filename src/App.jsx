@@ -20,7 +20,8 @@ function App() {
         id: 2,
         date: '2024-1-12',
       }],
-    tasks: []
+    tasks: [],
+    completedTasks :[]
   })
 
 
@@ -37,8 +38,7 @@ function App() {
     setProjectsState(prevState =>{
       const newProject = {
         ...projectData,
-        id : Math.random(),
-        tasks: []
+        id : Math.random()
       }
       return{
         ...prevState,
@@ -91,13 +91,34 @@ function App() {
   })
   }
 
+  function handleCompleteTask(task){
+    setProjectsState(prevState =>{
+      const newCompletedTask = {  // create copy of selected task
+        text: task.text,
+        projectId: task.projectId,
+        id: task.id,
+      }
+      // const newTasks = projectsState.tasks.filter(object => {
+      //   return object.id !== task.id;
+      // })
+      return{
+        ...prevState,
+        completedTasks: [newCompletedTask, ...prevState.completedTasks],
+        tasks:[...prevState.tasks.filter((task) => task.id !== newCompletedTask.id)]
+      }
+  })
+  }
+
+
   const selectedProject = projectsState.projects.find(project => project.id === projectsState.selectedProject)
 
   let content = <Project 
                   tasks={projectsState.tasks} 
+                  completedTasks={projectsState.completedTasks}
                   project={selectedProject} 
                   deleteProject={handleDeleteProject} 
                   addTask={handleAddTask}
+                  onComplete={handleCompleteTask}
                 />
 
   if(projectsState.selectedProject === null) {
