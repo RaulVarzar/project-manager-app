@@ -18,7 +18,7 @@ export default function Sidebar({activeProjects, onAddProject, onSelectProject, 
                     <ul className="ml-2 border-l-2 border-l-base-300 group">
 
                     { activeProjects.map( (project) => {
-                    let classes = 'animate-fade-down animate-duration-500 transition duration-150 mb-2 block tooltip-right tooltip-accent tooltip'
+                    let classes = 'w-full animate-fade-down animate-duration-500 transition duration-150 mb-2 block tooltip-right tooltip-accent tooltip'
                     if (project.id === selectedProject){
                         classes += ' text-accent font-bold'
                     }

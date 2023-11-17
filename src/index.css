@@ -12,3 +12,22 @@
   -webkit-box-shadow: inset 0px 0px 4px 1px rgba(0,0,0,0.5); 
   box-shadow: inset 0px 0px 4px 1px rgba(0,0,0,0.5);
   }
+
+  .react-confirm-alert-overlay {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px)
+  }
+
+  .react-confirm-alert-background {
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  .react-confirm-alert-body {
+    background: #345da7;
+  }
+  .react-confirm-alert-body h1{
+    color:white
+  }
+  .react-confirm-alert-button-group button:first-child{
+    background:green
+  }

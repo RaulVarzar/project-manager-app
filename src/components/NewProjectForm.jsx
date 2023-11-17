@@ -32,7 +32,7 @@ export default function NewProjectForm({onAdd, cancelForm}) {
     return(
         <>
         <Modal ref={modal}> Invalid Input </Modal>
-        <div className="w-1/2 p-10 pb-6 mx-auto transition duration-300 ease-in-out elevation-5 rounded-xl bg-base-300 animate-fade-up animate-duration-300 hover:elevation-0">
+        <div className="w-1/2 p-10 pb-6 mx-auto transition duration-300 ease-in-out elevation-5 rounded-xl bg-base-300 animate-fade-up animate-duration-300 hover:elevation-1np">
             <div className="flex flex-col">
                 <Input ref={titleRef} label="Title"/>
                 <Input ref={descRef} textarea label="Description"/>

@@ -3,6 +3,8 @@ import Sidebar from "./components/Sidebar.jsx";
 import NewProject from "./components/NewProjectForm.jsx"; 
 import Project  from "./components/Project.jsx"
 import NoProjectSelected from "./components/NoProjectSelected.jsx"
+import { confirmAlert } from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
 
 
 function App() {
@@ -20,7 +22,11 @@ function App() {
         id: 2,
         date: '2024-1-12',
       }],
-    tasks: [],
+    tasks: [
+      {text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', projectId:1, id:1},
+      {text:'Maecenas blandit.', projectId:1, id:2},
+      {text:'Curabitur cursus nibh eget ipsum imperdiet ', projectId:1, id:3}
+    ],
     completedTasks :[]
   })
 
@@ -43,7 +49,7 @@ function App() {
       return{
         ...prevState,
         selectedProject: undefined,
-        projects: [...prevState.projects, newProject]
+        projects: [newProject, ...prevState.projects]
       }
   })
   }
@@ -109,6 +115,23 @@ function App() {
   })
   }
 
+  function submit () {
+    return(
+    confirmAlert({
+      title: 'Are you sure you want to delete this project?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick:  handleDeleteProject
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ]
+    }))
+  };
+
 
   const selectedProject = projectsState.projects.find(project => project.id === projectsState.selectedProject)
 
@@ -116,7 +139,7 @@ function App() {
                   tasks={projectsState.tasks} 
                   completedTasks={projectsState.completedTasks}
                   project={selectedProject} 
-                  deleteProject={handleDeleteProject} 
+                  deleteProject={submit} 
                   addTask={handleAddTask}
                   onComplete={handleCompleteTask}
                 />
