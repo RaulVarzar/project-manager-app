@@ -13,7 +13,7 @@ export default {
     require('tailwindcss-elevation')
   ],
   daisyui: {
-    themes: ["light", "dark", "dim", "dark", "luxury", "synthwave", "forest", "black", "aqua"],
+    themes: ["light", "dark", "dim", "dark", "luxury", "synthwave", "forest", "black", "aqua", "cyberpunk"],
   },
   theme: {
     extend: {

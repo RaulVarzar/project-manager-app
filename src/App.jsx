@@ -150,9 +150,8 @@ function App() {
     content = <NoProjectSelected onAddProject = {handleAddNewProject}/> 
   }
 
-  
   return (
-    <div className="flex"> 
+    <div className="flex h-screen"> 
       <Sidebar 
         onAddProject={handleAddNewProject} 
         activeProjects={projectsState.projects} 
@@ -160,9 +159,16 @@ function App() {
         selectedProject={projectsState.selectedProject}
       />
       
-      <div className="grid content-center w-full min-h-screen my-auto elevation-8 hover:elevation-11">
+      
+          
+        <div className="grid content-center w-full min-h-screen elevation-8 hover:elevation-11">
             {content}
       </div>
+    
+      
+      {/* <div className="grid content-center w-full min-h-screen elevation-8 hover:elevation-11">
+            {content}
+      </div> */}
      
     </div>
   );
