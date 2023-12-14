@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "framer-motion": "^10.16.16",
     "react": "^18.2.0",
     "react-confirm-alert": "^3.0.6",
     "react-dom": "^18.2.0",
+    "react-uuid": "^2.0.0",
     "tailwindcss-animated": "^1.0.1",
     "tailwindcss-elevation": "^2.0.0"
   },

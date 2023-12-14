@@ -1,152 +1,103 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "./components/Sidebar.jsx";
 import NewProject from "./components/NewProjectForm.jsx"; 
 import Project  from "./components/Project.jsx"
 import NoProjectSelected from "./components/NoProjectSelected.jsx"
-import { confirmAlert } from "react-confirm-alert";
-import 'react-confirm-alert/src/react-confirm-alert.css' // Import css
-
 
 function App() {
-
-  const [projectsState, setProjectsState] = useState({
-    selectedProject: undefined,
-    projects: [
+  
+  const [selectedProject, setSelectedProject] = useState(undefined);
+  
+  const [projectsState, setProjectsState] = useState(
+    [
       { title: 'My React Project',
         description: 'this is my first test project',
         id: 1,
         date: '2023-11-11',
+        tasks: [
+          { task:"Lorem ipsum dolor sit amet, consectetur adipiscing elit.", completed: false },
+          { task:"Maecenas blandit.", completed: false },
+          { task:"Curabitur cursus nibh eget ipsum imperdiet ", completed: false },
+        ]
       },
-      { title: 'next.js project',
-        description: 'this is my second test project',
+      { title: 'test project',
+        description: 'this is my first test project',
         id: 2,
-        date: '2024-1-12',
-      }],
-    tasks: [
-      {text:'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', projectId:1, id:1},
-      {text:'Maecenas blandit.', projectId:1, id:2},
-      {text:'Curabitur cursus nibh eget ipsum imperdiet ', projectId:1, id:3}
-    ],
-    completedTasks :[]
-  })
-
-
-  function handleAddNewProject () {
-    setProjectsState( prevState => {
-      return{
-        ...prevState,
-        selectedProject: null
+        date: '2023-11-11',
+        tasks: [
+          { task:"Lorem ipsum dolor sit amet, consectetur adipiscing elit.", completed: false },
+          { task:"Maecenas blandit.", completed: false },
+          { task:"Curabitur cursus nibh eget ipsum imperdiet ", completed: true },
+        ]
       }
-    })
+    ]
+  )
+
+
+  // useEffect(() => {
+  //   localStorage.setItem('storedProjects', JSON.stringify(projectsState));
+  // }, [projectsState]);
+
+  // useEffect(() => {
+  //   const items = JSON.parse(localStorage.getItem('storedProjects'));
+  //   if (items) {
+  //     setStoredProjects(items);
+  //   }
+  // }, []);
+
+  function handleAddNewProject () { // DONE
+    setSelectedProject(null)
   }
 
-  function handleSubmitProject(projectData) {  // used to submit the form data and create a new project
-    setProjectsState(prevState =>{
-      const newProject = {
-        ...projectData,
-        id : Math.random()
-      }
-      return{
-        ...prevState,
-        selectedProject: undefined,
-        projects: [newProject, ...prevState.projects]
-      }
-  })
+  function handleSubmitProject(newProject) {  //  DONE
+    setProjectsState(prevProjectsState => [ newProject,...prevProjectsState]);
+    setSelectedProject(undefined)
   }
 
-  function handleDeleteProject() {  // used to submit the form data and create a new project
-    setProjectsState(prevState =>{
-      return{
-        ...prevState,
-        selectedProject: undefined,
-        projects: prevState.projects.filter((project) => project.id != prevState.selectedProject)
-      }
-  })
+  function handleDeleteProject() {   // DONE
+    setProjectsState(projectsState.filter(item => item.id !== selectedProject.id));
+    setSelectedProject(undefined)
   }
 
-  function handleSelectProject(id){
-    setProjectsState( prevState => {
-      return{
-        ...prevState,
-        selectedProject: (id)
-      }
-    })
+  function handleSelectProject(id){   // DONE
+    setSelectedProject(projectsState.find(x => x.id === id))
   }
 
-  function handleCancelForm(){  // used to close the cancel form and go back to the main screen
-    setProjectsState( prevState => {
-      return{
-        ...prevState,
-        selectedProject: undefined
-      }
-    })
+  function handleCancelForm(){  // DONE  used to close the cancel the new project form and go back to the main screen
+    setSelectedProject(undefined)
   }
 
-  function handleAddTask(text){
-    setProjectsState(prevState =>{
-      const taskId = Math.random()
-      const newTask = {
-        text:text,
-        projectId: prevState.selectedProject,
-        id: taskId,
-      }
-      return{
-        ...prevState,
-        tasks: [newTask, ...prevState.tasks]
-      }
-  })
-  }
-
-  function handleCompleteTask(task){
-    setProjectsState(prevState =>{
-      const newCompletedTask = {  // create copy of selected task
-        text: task.text,
-        projectId: task.projectId,
-        id: task.id,
-      }
-      // const newTasks = projectsState.tasks.filter(object => {
-      //   return object.id !== task.id;
-      // })
-      return{
-        ...prevState,
-        completedTasks: [newCompletedTask, ...prevState.completedTasks],
-        tasks:[...prevState.tasks.filter((task) => task.id !== newCompletedTask.id)]
-      }
-  })
-  }
-
-  function submit () {
-    return(
-    confirmAlert({
-      title: 'Are you sure you want to delete this project?',
-      buttons: [
+  function handleAddTask(task){
+    const projectIndex = projectsState.findIndex(project => project.id === selectedProject.id)
+    
+    if (projectsState[projectIndex].tasks.filter(e => e.task === task).length < 1) { // check if task already exists 
+      projectsState[projectIndex].tasks.push(
         {
-          label: 'Yes',
-          onClick:  handleDeleteProject
-        },
-        {
-          label: 'No',
-          onClick: () => {}
+          task: task, 
+          completed: false
         }
-      ]
-    }))
-  };
+      )
+    }
+  }
 
-
-  const selectedProject = projectsState.projects.find(project => project.id === projectsState.selectedProject)
+  function handleCompleteTask (task) {
+    const projectIndex = projectsState.findIndex(project => project.id === selectedProject.id)  // the index of the selected project
+    const currentTasks = projectsState[projectIndex].tasks 
+    const taskIndex = currentTasks.findIndex( item => ( item.task === task )); //  the index of the task that needs to be updated
+    currentTasks[taskIndex]['completed'] = true // updating the value for the given task
+    setProjectsState ([ ...projectsState ])
+  }
 
   let content = <Project 
-                  tasks={projectsState.tasks} 
-                  completedTasks={projectsState.completedTasks}
                   project={selectedProject} 
-                  deleteProject={submit} 
+                  deleteProject={handleDeleteProject} 
                   addTask={handleAddTask}
                   onComplete={handleCompleteTask}
                 />
 
-  if(projectsState.selectedProject === null) {
-    content = <NewProject onAdd={handleSubmitProject} cancelForm={handleCancelForm}/>
-  } else if (projectsState.selectedProject === undefined){
+  if(selectedProject === null) {
+    content = <NewProject onSubmitNewProject={handleSubmitProject} cancelForm={handleCancelForm}/>
+  } else if (selectedProject === undefined){
     content = <NoProjectSelected onAddProject = {handleAddNewProject}/> 
   }
 
@@ -154,22 +105,14 @@ function App() {
     <div className="flex h-screen"> 
       <Sidebar 
         onAddProject={handleAddNewProject} 
-        activeProjects={projectsState.projects} 
+        activeProjects={projectsState} 
         onSelectProject={handleSelectProject}
-        selectedProject={projectsState.selectedProject}
+        selectedProjectId={selectedProject && selectedProject.id}
       />
       
-      
-          
-        <div className="grid content-center w-full min-h-screen elevation-8 hover:elevation-11">
-            {content}
+      <div className="grid content-center w-full min-h-screen elevation-8 hover:elevation-11">
+        {content}
       </div>
-    
-      
-      {/* <div className="grid content-center w-full min-h-screen elevation-8 hover:elevation-11">
-            {content}
-      </div> */}
-     
     </div>
   );
 }

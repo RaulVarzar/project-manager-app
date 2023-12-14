@@ -1,16 +1,16 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
+import Modal from "./Modal"
+import {motion} from 'framer-motion'
 
-export default function Project( {project, tasks, completedTasks, deleteProject, addTask, onComplete}) {
+export default function Project( {project, deleteProject, addTask, onComplete}) {
 
     const [input, setInput] = useState('')
-
-    const selectedTasks = tasks.filter(task => task.projectId === project.id)
-    const selectedCompletedTasks = completedTasks.filter(task => task.projectId === project.id)
+    const modal = useRef()
 
     function handleChange(){
         setInput(event.target.value)
     }
-
+    
     function handleAddTask(e){
         if (e.key === 'Enter') { 
             if (input.trim().length !== 0)  {
@@ -19,16 +19,20 @@ export default function Project( {project, tasks, completedTasks, deleteProject,
             }
         }
     }
+    
+    function doubleCheck(){
+        modal.current.open()
+    }
 
+    const activeTasks = project.tasks.filter((task) => {return task.completed === false})
+    const completedTasks = project.tasks.filter((task) => {return task.completed === true})
 
-    const formattedDate = new Date(project.date).toLocaleDateString('en-GB', {
-        year: 'numeric', month: 'short', day:'numeric'
-    })
-
-    return(
+    
+    return (
         <>
-          <div className="w-11/12 mx-auto transition duration-200 ease-out rounded-lg xl:w-10/12 elevation-5 bg-base-300 animate-fade-up animate-duration-100 hover:elevation-2">
-            <div className="p-0">
+        <Modal ref={modal} errorText={"This can't be undone"} action={() =>deleteProject()}>Delete  project?</Modal>
+          <motion.div layout="size" className="w-11/12 mx-auto transition duration-200 ease-out rounded-lg xl:w-10/12 elevation-5 bg-base-300 animate-fade-up animate-duration-100 hover:elevation-2">
+            <motion.div className="p-0">
                 <div className="p-0 text-center justify-items-end lg:flex">
                     <div className="flex px-0 py-4 rounded-t-lg min-w-[30%] lg:rounded-r-none lg:rounded-l-lg lg:px-10 bg-base-200 lg:text-right ">
                         <div className="w-full m-auto">
@@ -52,55 +56,51 @@ export default function Project( {project, tasks, completedTasks, deleteProject,
                                     className="w-1/2 max-w-xs mr-2 rounded-lg outline-none focus:outline-none bg-base-100 input" 
                                 />
                         </div>
-                            
-                        <div className="flex flex-wrap py-4 justify-normal md:gap-2 xl:gap-4 ">
-                           
-
-                            {selectedTasks.map((task) => 
-                                <div key={task.id} className="flex-auto my-1 transition duration-200 ease-out grow animate-duration-200 animate-fade-right join elevation-6 hover:elevation-1">
-                                    <span className="p-2 text-sm font-semibold text-center rounded-lg shadow-inner lg:px-6 lg:py-3 join-item bg-info-content grow text-neutral-content ">
-                                    {task.text}
-                                    </span>
-                                    <button 
-                                        onClick={() => onComplete(task)}
-                                        className="h-full btn btn-default hover:btn-accent join-item">
-                                        <i className="fa fa-check"></i
-                                        >
-                                    </button>
-                                </div>
-                                    
+                        <div className="divider divider-neutral">Active</div>
+                        
+                        {activeTasks.length < 1 ?<p className="italic opacity-50">No active tasks.</p>:
+                            <div className="flex flex-wrap gap-2 py-4 justify-normal xl:gap-4 ">   
+                            {activeTasks.map(({task, completed, index}) =>  
+                                    <div key={index} className="flex-auto my-1 transition duration-200 ease-out grow animate-duration-200 animate-fade-right join elevation-6 hover:elevation-1">
+                                        <span className="p-2 text-sm font-semibold text-center rounded-lg shadow-inner lg:px-6 lg:py-3 join-item bg-neutral bg-opacity-60 grow text-neutral-content ">
+                                        {task} 
+                                        </span>
+                                        
+                                            <button 
+                                                onClick={() => onComplete(task, project.id)}
+                                                className="h-full bg-opacity-50 border-none btn btn-primary join-item">
+                                                <i className="fa fa-check"></i
+                                                >
+                                            </button>
+                                    </div>
                             )}
-                        </div>
+                            </div>
+                        }
 
                         <div className="divider divider-neutral">Completed</div>
-                        {selectedCompletedTasks.length < 1 ? <p>There are no completed tasks yet</p> : 
-                        <div className="flex flex-wrap justify-center gap-1 p-0 md:gap-2 xl:gap-4">
-                            {selectedCompletedTasks.map((task) => 
-                                <div key={task.id} className="tooltip" data-tip="Completed">
-                                    <div  className="transition duration-200 ease-out animate-duration-200 animate-fade-down join elevation-3">
-                                        <span className="px-6 py-3 text-sm font-semibold text-center rounded-lg shadow-inner bg-accent join-item grow text-neutral-content ">
-                                        {task.text}
-                                        </span>
+
+                        {completedTasks.length < 1 ? <p className="italic opacity-50">There are no finished tasks yet.</p>:
+                            <div className="flex flex-wrap justify-center gap-2 p-0 md:gap-3 xl:gap-4">
+                                {completedTasks.map(({task}) => 
+                                    <div key={task.id} className="tooltip" data-tip="Completed">
+                                        <div  className="transition duration-200 ease-out animate-duration-200 animate-fade-down join elevation-3">
+                                            <span className="px-6 py-3 text-sm font-semibold text-center rounded-lg shadow-inner bg-primary join-item grow text-stone-200 ">
+                                            {task}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                             )}
-                        </div>
-                    }
-                         
-                        
-                        <button onClick={deleteProject} className="mx-auto mt-8 text-gray-300 btn-sm btn btn-ghost hover:text-red-500">
-                            <i className="fa fa-trash-can"> </i>
-                            Delete project
-                        </button>
+                                )}
+                            </div>
+                        }
                     </div>
-                    
-                    
                 </div>
-                
-                
-            </div>
-        </div>
-            
-        </>
+            </motion.div>
+        </motion.div>
+
+        <button onClick={doubleCheck} className="mx-auto mt-4 rounded-md hover:text-red-400 text-stone-400 btn-md btn btn-ghost">
+            <i className="fa fa-trash-can fa-xl"></i>
+            DELETE PROJECT
+        </button>
+    </>
     )
 }

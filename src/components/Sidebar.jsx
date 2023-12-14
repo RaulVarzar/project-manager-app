@@ -1,14 +1,14 @@
 import Button from "./Button"
 import { useState } from "react"
 
-export default function Sidebar({activeProjects, onAddProject, onSelectProject, selectedProject}) {
+export default function Sidebar({activeProjects, onAddProject, onSelectProject, selectedProjectId}) {
 
     const [menuOpen, setMenuOpen] = useState(false)
 
     function showMenu() {
         setMenuOpen(!menuOpen)
     }
-
+    
     function clickEvent(id) {
         onSelectProject(id)
         showMenu()
@@ -26,8 +26,6 @@ export default function Sidebar({activeProjects, onAddProject, onSelectProject, 
             <i className={!menuOpen ? "fa-solid fa-bars fa-xl" : "fa-solid fa-xmark fa-xl"}></i>
         </label>
         
-            
-      
         
         <aside className={"absolute z-20 w-full pt-16 md:pt-6 h-screen px-2 py-6 transition duration-300 bg-base-300 md:w-96 md:relative  md:z-20 " + (menuOpen ? " translate-x-[0%]" : "-translate-x-[100%] md:translate-x-0")}>
             <h2 className="text-xl font-bold text-center">PROJECT MANAGER</h2>
@@ -38,16 +36,16 @@ export default function Sidebar({activeProjects, onAddProject, onSelectProject, 
                 </Button>    
             </div>
             
-            {activeProjects.length >= 1 ?
-            <ul className="p-0 py-4 mx-auto mt-4 transition duration-200 ease-out menu group md:menu-lg">
-                <li className="mx-auto transition duration-300 -translate-x-1 md:translate-x-0 md:mx-0 md:opacity-60 group-hover:opacity-100">
+            {activeProjects ?
+            <ul className="p-0 py-4 mx-auto mt-4 transition duration-200 ease-out menu md:menu-lg">
+                <li className="mx-auto transition duration-300 -translate-x-1 md:translate-x-0 md:mx-0">
                     <h2 className="transition duration-[400ms] ease-in-out md:text-lg text-white menu-title group-hover:text-primary">Active Projects</h2>
                     <ul className="ml-2 border-l-2 border-l-base-300 group">
 
                     { activeProjects.map( (project) => {
                     let classes = 'block hover:text-white animate-fade-down animate-duration-500 transition duration-150 mb-2 w-fit tooltip-right tooltip-accent tooltip'
-                    if (project.id === selectedProject){
-                        classes += ' text-accent font-bold'
+                    if (project.id === selectedProjectId){
+                        classes += ' text-primary font-bold'
                     }
                     return( 
                         

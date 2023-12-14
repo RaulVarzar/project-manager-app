@@ -1,8 +1,9 @@
 import Input from "./Input"
 import { useRef } from "react"
 import Modal from "./Modal"
+import uuid from 'react-uuid';
 
-export default function NewProjectForm({onAdd, cancelForm}) {
+export default function NewProjectForm({onSubmitNewProject, cancelForm}) {
 
     const modal = useRef()
 
@@ -20,18 +21,18 @@ export default function NewProjectForm({onAdd, cancelForm}) {
             return
         }
 
-        onAdd({
+        onSubmitNewProject({
             title: enteredTitle,
             description: enteredDescription,
-            date: enteredDate
+            id: uuid(),
+            date: enteredDate,
+            tasks:[]
         })
-        
     }
-
 
     return(
         <>
-        <Modal ref={modal}> Invalid Input </Modal>
+        <Modal ref={modal} errorText={'Please fill in all the fields'}> Invalid Input </Modal>
         <div className="w-10/12 p-10 pb-6 mx-auto transition duration-300 ease-in-out md:8/12 xl:w-1/2 elevation-5 rounded-xl bg-base-300 animate-fade-up animate-duration-300 hover:elevation-1np">
             <div className="flex flex-col">
                 <Input ref={titleRef} label="Title"/>
