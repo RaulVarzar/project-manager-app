@@ -25,9 +25,9 @@ function App() {
         id: 2,
         date: '2023-11-11',
         tasks: [
-          { task:"Lorem ipsum dolor sit amet, consectetur adipiscing elit.", completed: false },
-          { task:"Maecenas blandit.", completed: false },
-          { task:"Curabitur cursus nibh eget ipsum imperdiet ", completed: true },
+          { task:"Lorem ipsum dolor sit amet, consectetur adipiscing elit1.", completed: false },
+          { task:"Maecenas blandit.1", completed: false },
+          { task:"Curabitur cursus nibh eget ipsum imperdiet1 ", completed: true },
         ]
       }
     ]
@@ -102,7 +102,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen"> 
+    <div className="flex w-full h-screen bg-neutral"> 
       <Sidebar 
         onAddProject={handleAddNewProject} 
         activeProjects={projectsState} 
@@ -110,7 +110,7 @@ function App() {
         selectedProjectId={selectedProject && selectedProject.id}
       />
       
-      <div className="grid content-center w-full min-h-screen elevation-8 hover:elevation-11">
+      <div className="grid content-center w-full md:m-3 xl:m-4 bg-base-300 md:rounded-2xl elevation-3">
         {content}
       </div>
     </div>
