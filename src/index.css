@@ -1,8 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body,html{
+  font-family: 'Roboto Mono', sans-serif;
+}
 
 .capitalize-first::first-letter {
     text-transform: uppercase;
@@ -34,4 +38,10 @@
   .modal{
     backdrop-filter: blur(7px);
     background: rgba(0, 0, 0, 0.4);
+}
+
+textarea:focus, input:focus{
+  @apply border-transparent;
+  @apply focus:border-transparent;
+  @apply focus:ring-0
 }

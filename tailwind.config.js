@@ -14,7 +14,11 @@ module.exports = {
       },
       screens: { // remove hover on mobile
         'betterhover': {'raw': '(hover: hover)'},
-    }
+    },
+    fontFamily: {
+      'roboto-mono': ['"Roboto Mono"', 'cursive'],
+      'press-start': ['"Press Start 2P"', 'cursive'],
+    },
     }
   },
   plugins: [

@@ -1,12 +1,12 @@
-import { motion } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 
 export  function JumpIn({ children, duration, delay }){
     return(
         <motion.div
             initial={{  scale: 0.2, translateY:35, opacity:0 }}
             animate={{  scale: 1, translateY:0, opacity:1 }}
+            transition={{ duration: duration, delay:delay }}
             exit={{scale:0, opacity:0}}
-            transition={{type:'spring', duration: duration, delay:delay }}
         >
             {children}
         </motion.div>
@@ -39,10 +39,11 @@ export  function FromTop({ children, duration, delay }){
 
 export  function FromLeft({ children, duration, delay }){
     return(
-        <motion.div
+        <motion.div 
             initial={{ x:'-100%', opacity:0 }}
             animate={{ x:0, opacity:1}}
-            transition={{ duration: duration, delay:delay }}
+            transition={{ duration: duration, delay: delay }}
+            exit={{x:'-100%', opacity:0}}
         >
             {children}
         </motion.div>
