@@ -27,7 +27,7 @@
                                         </button>
                                         <button 
                                             className="relative border-none rounded-none btn hover:btn-error"
-                                            onClick={() => modal.current.open()}
+                                            onClick={() => modal.current.open()} 
                                         >
                                             <i className="fa-solid fa-trash-can"></i>
                                         </button>

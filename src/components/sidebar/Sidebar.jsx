@@ -1,55 +1,46 @@
-import { useState } from "react"
-
 import profilePic from "../../assets/profile.png"
 
 import Button from "../Button.jsx"
-import ActiveProjectsList from "./ActiveProjectsList.jsx"
 import ThemePicker from "./ThemePicker.jsx"
+
+import { Link } from "react-router-dom"
 
 export default function Sidebar({activeProjects, onAddProject, onHomePage, selectedProjectId}) {
 
-    const [menuOpen, setMenuOpen] = useState(false)
     
     function handleSelectProject(id) {
         onSelectProject(id)
-        setMenuOpen(false)
     }
 
     function handleStartAddProject() {
-        setMenuOpen(false)
         onAddProject()
     }
 
 
     return(
-        <>
-            <label className="absolute z-30 top-6 right-6 swap swap-rotate md:hidden">
-                <input type="checkbox" onClick={() => setMenuOpen(!menuOpen)} className="p-2"/>
-                <i className={!menuOpen ? "fa-solid fa-bars fa-xl" : "fa-solid fa-xmark fa-xl"}></i>
-            </label>
-            
-            <aside className={"z-20 rounded-xl pt-16 md:pt-6 px-2 transition place-content-center duration-300 w-fit md:relative flex flex-col items-stretch md:z-20 " + (menuOpen ? " translate-x-[0%]" : "-translate-x-[100%] md:translate-x-0")}>
-            <div className="flex flex-col w-fit"> 
-                    
-                    <div className="p-2">
-                        <img src={profilePic} alt="profile pic" className="p-2"/>
-                    </div> 
-                    <div className="grid gap-4">
-                        <button className="btn btn-ghost lg:btn-lg"><i className="fa-solid fa-house" onClick={onHomePage} ></i></button>
-                        <button className="btn btn-ghost lg:btn-lg"><i className="fa-solid fa-plus" onClick={handleStartAddProject}></i></button>
-                        <ThemePicker/>
+        <>  
+            <aside className="z-50 flex flex-row justify-center w-full p-4 px-2 transition duration-300 shadow-xl sm:w-10/12 md:w-fit md:py-16 xl:px-4 hover:shadow-none bg-base-300 sm:rounded-xl md:relative md:flex-col">
+
+                    <div className=" h-fit tooltip tooltip-right" data-tip="Profile">
+                        <img src={profilePic} alt="profile pic" className="h-auto mx-auto max-w-[48px]"/>
                     </div>
-                    {/* {activeProjects.length > 0 ?
-                        <ActiveProjectsList 
-                            activeProjects={activeProjects} 
-                            selectedProjectId={selectedProjectId} 
-                            onSelectProject={handleSelectProject}
-                        />
-                        :
-                        <h1 className="mt-10 italic tracking-wider text-center opacity-60">NO ACTIVE PROJECTS</h1>
-                    } */}
-                </div>
-               
+
+                    <div className="flex flex-row gap-4 mx-4 md:flex-col md:my-16 ">
+                        <div className="tooltip tooltip-right" data-tip="Home">
+                            <Link to={``}>
+                                <button className="btn btn-ghost lg:btn-lg"><i className="text-xl fa-solid fa-house"></i></button>
+                            </Link>
+                        </div>
+
+                        <div className="tooltip tooltip-right" data-tip="New project">
+                        <Link to={`new`}>
+                            <button className="btn btn-ghost lg:btn-lg"><i className="text-xl fa-solid fa-plus"></i></button>
+                            </Link>
+                        </div>
+                    </div>
+                    
+                    <ThemePicker/>
+                
             </aside>
         </>
     )

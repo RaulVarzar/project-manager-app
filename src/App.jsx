@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext,createContext } from "react";
 import Sidebar from "./components/sidebar/Sidebar.jsx";
 import NewProject from "./components/NewProjectForm.jsx"; 
 import Project  from "./components/Project.jsx"
-import NoProjectSelected from "./components/NoProjectSelected.jsx"
 import Alert from "./components/Alert.jsx";
 import HomePage from "./components/main/HomePage.jsx";
+import ErrorPage from "./components/ErrorPage.jsx";
+import { ProjectsContext } from "./Context.js";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+const storedProjects = JSON.parse(localStorage.getItem('storedProjects')) || []
 
 function App() {
-  const storedProjects = JSON.parse(localStorage.getItem('storedProjects')) || []
-
   const [selectedProject, setSelectedProject] = useState(undefined);
   
   const [projectsState, setProjectsState] = useState(storedProjects)
@@ -26,23 +28,16 @@ function App() {
     }
   }, []);
 
-
-  function handleAddNewProject () {
-    setSelectedProject(null)
-  }
-console.log(selectedProject)
+  
   function handleSubmitProject( newProject) {  
     // add new project to current projects
-    console.log("new:",newProject)
     const updatedProjects = [ newProject, ...projectsState ]
     // update local storage to include the new project
     localStorage.setItem( 
       "storedProjects",
       JSON.stringify( updatedProjects )
     )
-    // update state and go back to main page
-    setProjectsState(updatedProjects);
-    setSelectedProject(undefined) 
+    setProjectsState(updatedProjects)
     setShowAlert({message:'Project added', type: "success"})
   }
 
@@ -101,6 +96,17 @@ console.log(selectedProject)
     setProjectsState ([ ...projectsState ])
   }
 
+  function handleProjectCompleted () {
+    const projectIndex = projectsState.findIndex(project => project.id === selectedProject.id)
+    projectsState[projectIndex].completed = true
+    localStorage.setItem(
+      "storedProjects", 
+      JSON.stringify(projectsState)
+    );
+    setShowAlert({message:'Project completed', type: "success"})
+    setProjectsState ([ ...projectsState ])
+  }
+
   function handleUpdateTask(task, inputValue) {
     const taskIndex = selectedProject.tasks.findIndex( item => ( item.task === task )); 
     if (!alreadyExists(inputValue)){
@@ -127,7 +133,6 @@ console.log(selectedProject)
     setProjectsState ([ ...projectsState ])
   }
 
-
   let content = <Project 
                   project={selectedProject} 
                   deleteProject={handleDeleteProject} 
@@ -135,31 +140,54 @@ console.log(selectedProject)
                   onComplete={handleCompleteTask}
                   handleUpdate={handleUpdateTask}
                   handleDeleteTask={handleDeleteTask}
+                  setCompleted={handleProjectCompleted}
                   >
                 </Project>
 
-  if(selectedProject === null) {
-    content = <NewProject onSubmitNewProject={handleSubmitProject} cancelForm={handleCancelForm}/>
-  } else if (selectedProject === undefined){
-    content = <HomePage onAddProject = {handleAddNewProject} activeProjects={projectsState} onSelectProject={handleSelectProject}/> 
-  }
+
+  // <NewProject onSubmitNewProject={handleSubmitProject} cancelForm={handleCancelForm}/>
+  // <ProjectsContext.Provider value={storedProjects}>
+  //               <HomePage onSelectProject={handleSelectProject}/> 
+  //             </ProjectsContext.Provider>
+  
+  // <div className="flex flex-col-reverse items-center w-full h-screen md:flex-row xl:px-8 bg-neutral"> 
+  //     <Sidebar 
+  //       onAddProject={handleAddNewProject} 
+  //       activeProjects={projectsState} 
+  //       onHomePage={() => handleCancelForm()}
+  //       selectedProjectId={selectedProject && selectedProject.id}
+  //     />
+  //       <div className="grid items-center content-center w-full h-full px-4 py-10 mx-auto overflow-auto md:p-4 grow">
+  //        {/* {content} */}
+  //         {/* <Outlet />
+  //          */}
+  //      </div>
+  //    </div>
 
   return (
-    <div className="flex w-full min-h-screen md:overflow-clip bg-neutral"> 
-      <Sidebar 
-        onAddProject={handleAddNewProject} 
-        activeProjects={projectsState} 
-        onHomePage={() => setSelectedProject(undefined)}
-        selectedProjectId={selectedProject && selectedProject.id}
-      />
-      
-      <div className="grid content-center w-full py-12 my-4 mr-4 bg-base-300 md:rounded-2xl elevation-3">
-        {content}
+    <Router>
+      <div className="flex flex-col-reverse items-center w-full h-screen md:flex-row xl:px-8 bg-neutral"> 
+        <Sidebar />
+        <div className="grid items-center content-center w-full h-full px-4 py-10 mx-auto overflow-auto md:p-4 grow">
+          <Routes>
+            <Route path="/" element={<HomePage allProjects={projectsState} onSelectProject={handleSelectProject}/>}></Route>
+            <Route path="new" element={<NewProject onSubmitNewProject={handleSubmitProject}/>}></Route>
+            <Route path=":slug" element={<Project Projects={projectsState} deleteProject={handleDeleteProject} 
+                  addTask={handleAddTask} 
+                  onComplete={handleCompleteTask}
+                  handleUpdate={handleUpdateTask}
+                  handleDeleteTask={handleDeleteTask}
+                  setCompleted={handleProjectCompleted}/>}></Route>
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </div>
         <Alert content={showAlert} closeAlert={() => setShowAlert('')}/>
       </div>
-      
-    </div>
+    </Router>
   );
 }
 
 export default App;
+
+
+

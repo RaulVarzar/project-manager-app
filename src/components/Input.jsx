@@ -1,14 +1,23 @@
 import { forwardRef } from "react"
 
-const Input = forwardRef (function Input ({textarea, label, ...props}, ref) {
+const Input = forwardRef (function Input ({textarea, label, error, ...props}, ref) {
     return(
-        <>
-            <span className="mb-1 label-text"> {label} </span>
-            { textarea ? 
-                <textarea ref={ref} className="mb-4 rounded-lg textarea" {...props}></textarea>
-             : 
-                <input ref={ref} className="w-full max-w-xs mb-4 rounded-lg input" {...props}></input>}
-        </>
+        <div className="flex flex-col">
+                <label className="w-full form-control">
+                    <div className="label">
+                        <span className="label-text">{label}</span>
+                    </div>
+                    {textarea &&
+                        <textarea ref={ref} className="h-24 textarea textarea-bordered" {...props}></textarea>
+                    }
+                    {!textarea &&
+                        <input ref={ref} type="text" className={"input input-bordered w-full " + (error && ' input-error')} {...props}/>
+                    }
+                    <div className="label">
+                        <span className="text-xs label-text-alt text-error">{error}</span>
+                    </div>
+                </label>
+        </div>
     )
 })
 

@@ -17,7 +17,7 @@ export default function ThemePicker() {
     return(
           <details className="dropdown dropdown-right">
             <summary className="w-full btn-ghost btn" onClick={() => setDropdown(!dropdown)}>
-            <i class="fa-solid fa-sliders"></i>
+            <i className="fa-solid fa-sliders"></i>
               <i className={"fa-solid fa-chevron-right transition duration-300 " + (dropdown && " -rotate-180")}></i>
             </summary>
               <motion.ul key={dropdown} exit={{opacity:0}} initial={{opacity:0}} animate={{opacity:1}} className="mb-1 ml-2 shadow menu dropdown-content bg-base-100 rounded-box w-fit">
